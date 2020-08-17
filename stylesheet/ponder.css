@@ -1,0 +1,27 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.wrapper {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 25%;
+}
+
+.img-logo {
+  width: 400px;
+
+}
+
+body {
+  background-color: #2b325c;
+}
+
+.form-city {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20%;
+}
