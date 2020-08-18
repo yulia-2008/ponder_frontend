@@ -73,43 +73,79 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const stateSelector = document.querySelector('.form-city')
   const select = document.getElementById("state");
-  const selectedState = select.options[select.selectedIndex].text;
-  const abbr = selectedState.split(" ")[1]
+  
+  
 
   function getParks() {
 
-  stateSelector.addEventListener("submit", function(){
+  stateSelector.addEventListener("submit", function(e){
+    e.preventDefault()
+
+    let selectedState = e.target[0].options[select.selectedIndex].text;
+    let abbr = selectedState.split(" ")[1]
     
-    // let baseUrl = "https://developer.nps.gov/api/v1/parks?limit=20&stateCode="
-    // let key = "&api_key=hneol4X1l2adxmk2NQ0lHI7iXRjgZhd0jCoo9Wjc"
-    // fetch( baseUrl + abbr + key)  
 
-     fetch(  "https://developer.nps.gov/api/v1/parks?limit=20&stateCode=la&api_key=hneol4X1l2adxmk2NQ0lHI7iXRjgZhd0jCoo9Wjc" )
+     fetch(  `https://developer.nps.gov/api/v1/parks?limit=20&stateCode=${abbr}&api_key=hneol4X1l2adxmk2NQ0lHI7iXRjgZhd0jCoo9Wjc` )
     .then(resp => resp.json())
-    .then(obj => {console.log(obj) 
-    })
+    .then(obj => { obj.data.forEach(park => {renderPark(park)})
   })
-}
+      function renderPark(park) {
+console.log(park)
+        let body = document.querySelector('body')
+        let parkContainer = document.createElement('div')
+        parkContainer.className="park-container"
+        parkContainer.innerHTML =` <h1> ${park.fullName}</h1>
+                                   <img src=${park.images[0].url}/>
+                                   <p>Park Description:</p>
+                                   <p>${park.description}</p><br>
+                                   <p>Address: ${park.addresses[0].city}, ${park.addresses[0].postalCode}</p>
+                                   <p>Contacts: ${park.contacts.phoneNumbers[0].phoneNumber}</p>
+                                   <p>Operation hours:  ${park.operatingHours[0].standardHours.wednesday}</p><br>
+                                   <p>Activities:</p>
+                                   <ul>
+                                   <li>${park.activities[0].name}</li>
+                                   <li>${park.activities[1].name}</li>
+                                   <li>${park.activities[2].name}</li>
+                                   <li>${park.activities[3].name}</li>
+                                   <li>${park.activities[4].name}</li>
+                                   <li>${park.activities[5].name}</li>
+                                   </ul>
+                                    <br>
+                                   `
 
- getParks()
-//    document.addEventListener("submit", function(e){
-//     e.preventDefault()
 
-//       let options = {
+        body.appendChild(parkContainer)
+      }
+     
+     
+      
+
+
+//  let options = {
 //        method: "POST",
 //        headers: {
 //          "Content-Type": "application/json",
 //          "Accept": "application/json"
 //        },
-//        body: JSON.stringify( {imageId: 1, content: text} )       
-//    }
+//        body: JSON.stringify( { name: ??????} )       
+//     }
 
-//  fetch ( "http://localhost:3000/comments", options)
-//  .then(res => {form.reset(),  getImage()} )   
+//   fetch ( "http://www.localhost:3000/parks", options)
+//   .then(res => { console.log(res)} )   
 
+
+    
+    })
+  }
+
+
+ getParks()
+  // function postParks() {
+  //   document.addEventListener("submit", function(e){
+  //    e.preventDefault()
+
+     
 })
-
-
-
+   
 
 
