@@ -85,6 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let abbr = selectedState.split(" ")[1]
 
 
+<<<<<<< HEAD
      fetch(  `https://developer.nps.gov/api/v1/parks?limit=10&stateCode=${abbr}&api_key=hneol4X1l2adxmk2NQ0lHI7iXRjgZhd0jCoo9Wjc` )
     .then(resp => resp.json())
     .then(obj => {console.log(obj)
@@ -110,17 +111,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+=======
 
- getParks()
-//    document.addEventListener("submit", function(e){
-//     e.preventDefault()
+     fetch(  `https://developer.nps.gov/api/v1/parks?limit=20&stateCode=${abbr}&api_key=hneol4X1l2adxmk2NQ0lHI7iXRjgZhd0jCoo9Wjc` )
+    .then(resp => resp.json())
+    .then(obj => { obj.data.forEach(park => {renderPark(park)})
+>>>>>>> a5ad1a37b0cbe4fc6f5df435698402ed81a9346e
 
-//       let options = {
+  })
+      function renderPark(park) {
+console.log(park.images[0].url)
+        let body = document.querySelector('body')
+        let parkContainer = document.createElement('div')
+        parkContainer.className="park-container"
+        parkContainer.innerHTML =` <h1> ${park.fullName}</h1>
+                                   <img src=${park.images[0].url}/>
+                                   <p>Park Description:</p>
+                                   <p>${park.description}</p><br>
+                                   <p>Address: ${park.addresses[0].city}, ${park.addresses[0].postalCode}</p>
+                                   <p>Contacts: ${park.contacts.phoneNumbers[0].phoneNumber}</p>
+                                   <p>Operation hours:  ${park.operatingHours[0].standardHours.wednesday}</p><br>
+                                   <p>Activities:</p>
+                                   <ul>
+                                   <li>${park.activities[0].name}</li>
+                                   <li>${park.activities[1].name}</li>
+                                   <li>${park.activities[2].name}</li>
+                                   <li>${park.activities[3].name}</li>
+                                   <li>${park.activities[4].name}</li>
+                                   <li>${park.activities[5].name}</li>
+                                   </ul>
+                                    <br>
+                                   `
+
+
+        body.appendChild(parkContainer)
+      }
+     
+     
+      
+
+
+//  let options = {
 //        method: "POST",
 //        headers: {
 //          "Content-Type": "application/json",
 //          "Accept": "application/json"
 //        },
+<<<<<<< HEAD
 //        body: JSON.stringify( {imageId: 1, content: text} )
 //    }
 
@@ -128,3 +165,27 @@ document.addEventListener("DOMContentLoaded", () => {
 //  .then(res => {form.reset(),  getImage()} )
 
 })
+=======
+//        body: JSON.stringify( { name: ??????} )       
+//     }
+
+//   fetch ( "http://www.localhost:3000/parks", options)
+//   .then(res => { console.log(res)} )   
+
+
+    
+    })
+  }
+
+
+ getParks()
+  // function postParks() {
+  //   document.addEventListener("submit", function(e){
+  //    e.preventDefault()
+
+     
+})
+   
+
+
+>>>>>>> a5ad1a37b0cbe4fc6f5df435698402ed81a9346e
