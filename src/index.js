@@ -73,20 +73,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const stateSelector = document.querySelector('.form-city')
   const select = document.getElementById("state");
-  const selectedState = select.options[select.selectedIndex].text;
-  const abbr = selectedState.split(" ")[1]
+  
+  
 
   function getParks() {
 
+<<<<<<< HEAD
   stateSelector.addEventListener("submit", function(){
 
     // let baseUrl = "https://developer.nps.gov/api/v1/parks?limit=20&stateCode="
     // let key = "&api_key=hneol4X1l2adxmk2NQ0lHI7iXRjgZhd0jCoo9Wjc"
     // fetch( baseUrl + abbr + key)
+=======
+  stateSelector.addEventListener("submit", function(e){
+    e.preventDefault()
 
-     fetch(  "https://developer.nps.gov/api/v1/parks?limit=20&stateCode=la&api_key=hneol4X1l2adxmk2NQ0lHI7iXRjgZhd0jCoo9Wjc" )
+    let selectedState = e.target[0].options[select.selectedIndex].text;
+    let abbr = selectedState.split(" ")[1]
+    
+>>>>>>> 143fd8fd36399d4ab942235c778b497cb94b5f20
+
+     fetch(  `https://developer.nps.gov/api/v1/parks?limit=20&stateCode=${abbr}&api_key=hneol4X1l2adxmk2NQ0lHI7iXRjgZhd0jCoo9Wjc` )
     .then(resp => resp.json())
+<<<<<<< HEAD
     .then(parkObj => {renderHtml(parkObj.data)
+=======
+    .then(obj => {console.log(obj)  
+>>>>>>> 143fd8fd36399d4ab942235c778b497cb94b5f20
     })
   })
 }
