@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let abbr = selectedState.split(" ")[1]
     
 
-     fetch(  `https://developer.nps.gov/api/v1/parks?limit=20&stateCode=${abbr}&api_key=hneol4X1l2adxmk2NQ0lHI7iXRjgZhd0jCoo9Wjc` )
+     fetch(  `https://developer.nps.gov/api/v1/parks?limit=10&stateCode=${abbr}&api_key=hneol4X1l2adxmk2NQ0lHI7iXRjgZhd0jCoo9Wjc` )
     .then(resp => resp.json())
     .then(obj => {console.log(obj)  
     })
