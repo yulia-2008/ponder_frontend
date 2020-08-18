@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   for(var i = 0;i<usStates.length;i++){
       let option = document.createElement("option");
-      option.text = usStates[i].name+' ['+usStates[i].abbreviation+']';
+      option.text = usStates[i].name+' '+usStates[i].abbreviation+'';
       option.value = i;
       let select = document.getElementById("state");
       select.appendChild(option);
@@ -72,8 +72,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   const stateSelector = document.querySelector('.form-city')
-  console.log(stateSelector)
+  const select = document.getElementById("state");
+  const selectedState = select.options[select.selectedIndex].text;
+  const abbr = selectedState.split(" ")[1]
 
+  function getParks() {
 
+  stateSelector.addEventListener("submit", function(){
+    
+    // let baseUrl = "https://developer.nps.gov/api/v1/parks?limit=20&stateCode="
+    // let key = "&api_key=hneol4X1l2adxmk2NQ0lHI7iXRjgZhd0jCoo9Wjc"
+    // fetch( baseUrl + abbr + key)  
+
+     fetch(  "https://developer.nps.gov/api/v1/parks?limit=20&stateCode=la&api_key=hneol4X1l2adxmk2NQ0lHI7iXRjgZhd0jCoo9Wjc" )
+    .then(resp => resp.json())
+    .then(obj => {console.log(obj) 
+    })
+  })
+}
+
+ getParks()
+//    document.addEventListener("submit", function(e){
+//     e.preventDefault()
+
+//       let options = {
+//        method: "POST",
+//        headers: {
+//          "Content-Type": "application/json",
+//          "Accept": "application/json"
+//        },
+//        body: JSON.stringify( {imageId: 1, content: text} )       
+//    }
+
+//  fetch ( "http://localhost:3000/comments", options)
+//  .then(res => {form.reset(),  getImage()} )   
 
 })
+
+
+
+
+
