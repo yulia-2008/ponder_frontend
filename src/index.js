@@ -79,17 +79,36 @@ document.addEventListener("DOMContentLoaded", () => {
   function getParks() {
 
   stateSelector.addEventListener("submit", function(){
-    
+
     // let baseUrl = "https://developer.nps.gov/api/v1/parks?limit=20&stateCode="
     // let key = "&api_key=hneol4X1l2adxmk2NQ0lHI7iXRjgZhd0jCoo9Wjc"
-    // fetch( baseUrl + abbr + key)  
+    // fetch( baseUrl + abbr + key)
 
      fetch(  "https://developer.nps.gov/api/v1/parks?limit=20&stateCode=la&api_key=hneol4X1l2adxmk2NQ0lHI7iXRjgZhd0jCoo9Wjc" )
     .then(resp => resp.json())
-    .then(obj => {console.log(obj) 
+    .then(parkObj => {renderHtml(parkObj.data)
     })
   })
 }
+  const renderHtml = (parkObj) => {
+    parkObj.forEach(park => {
+      const fullNameLi = document.createElement('li')
+      const ulContainer = document.querySelector("body > form > div > ul")
+    
+
+
+
+
+
+    })
+}
+
+
+
+
+
+
+
 
  getParks()
 //    document.addEventListener("submit", function(e){
@@ -101,15 +120,10 @@ document.addEventListener("DOMContentLoaded", () => {
 //          "Content-Type": "application/json",
 //          "Accept": "application/json"
 //        },
-//        body: JSON.stringify( {imageId: 1, content: text} )       
+//        body: JSON.stringify( {imageId: 1, content: text} )
 //    }
 
 //  fetch ( "http://localhost:3000/comments", options)
-//  .then(res => {form.reset(),  getImage()} )   
+//  .then(res => {form.reset(),  getImage()} )
 
 })
-
-
-
-
-
