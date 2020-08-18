@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(obj => { obj.data.forEach(park => {renderPark(park)})
   })
       function renderPark(park) {
-console.log(park)
+console.log(park.images[0].url)
         let body = document.querySelector('body')
         let parkContainer = document.createElement('div')
         parkContainer.className="park-container"
