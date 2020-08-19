@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
           let parkContainer = document.createElement('div')
           parkContainer.className = "park-container"
           parkContainer.innerHTML =` <h1> ${park.name}</h1>
-                                    <img src: ${park.image_url}/>
+                                    <img src= ${park.image_url}/>
                                     <p>Address: ${park.address}</p>
                                     <p>Contacts: ${park.contact}</p>
                                     <p>Activities: ${park.activities}</p>
@@ -112,9 +112,9 @@ document.addEventListener("DOMContentLoaded", () => {
                                    `
                                    
                            container.appendChild(parkContainer)
-                let form = document.querySelector('.comment-form')
+                let form = parkContainer.querySelector('.comment-form')    //set dataset to comment form
                 form.dataset.parkId = park.id
-                
+               console.log(form.dataset.parkId)
                                   
         }
    }) 
@@ -132,7 +132,9 @@ div.addEventListener("click", function(e){
   e.preventDefault()
   
 let comment = e.target.parentNode[0].value                          //  comment  from input                                                 
-let parkId = e.target.parentNode.dataset.parkId  
+let parkId = e.target.parentNode.dataset.parkId 
+
+ 
                               
   let options = {
        method: "POST",
@@ -149,15 +151,21 @@ let parkId = e.target.parentNode.dataset.parkId
   )
 } 
 
-    if (e.target.textContent === "All comments")
-    {e.preventDefault(), renderComments()
+    if (e.target.textContent === "All comments"){
+         e.preventDefault(), 
+         
+     
+         fetch("http://www.localhost:3000/comment/" + parkId)
+        .then(resp => resp.json())
+        .then(obj => { renderComments(obj)
+  })
     }
 
    }) 
 
-   function renderComments() {
-     // fetch request to localhost:3000/comments
-     // creating <p> elemnts or <li> for each comment if comment park_id matches park.id (find parentNode of button and use form.dataset)
+   function renderComments(obj) {
+
+     // need: create <p> elemnts or <li> for each comment if comment park_id matches park.id (find parentNode of button and use form.dataset)
      // <p> text Content set to comment.description
    }
 
