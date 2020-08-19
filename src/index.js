@@ -108,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                     <input  type="text" name="comment"  placeholder="Add a comment..." />
                                     <button class="comment-button" type="submit">Post</button>
                                     </form>
+                                    <input type="button" value= "All comments">
                                    `
                                    
                            container.appendChild(parkContainer)
@@ -130,27 +131,35 @@ div.addEventListener("click", function(e){
   if (e.target.textContent === "Post") {
   e.preventDefault()
   
-let comment = e.target.parentNode[0].value                          //  comment  from input
-                                                   
+let comment = e.target.parentNode[0].value                          //  comment  from input                                                 
 let parkId = e.target.parentNode.dataset.parkId  
-      
-                            
+                              
   let options = {
        method: "POST",
        headers: {
          "Content-Type": "application/json",
          "Accept": "application/json"
        },
-       body: JSON.stringify( {  comments: comment } )       
+       body: JSON.stringify( {  park_id: parkId, user_id: 58, description: comment } )       
     }
 
-//fetch ( "http://www.localhost:3000/parks/" + parkId, options)
   fetch ( "http://www.localhost:3000/comments", options)
-  .then(res => { console.log(res)} )     
-    
+  .then(resp =>  resp.json())     
+  .then(comm => console.log(comm), alert("Thank you for your comment")  
+  )
 } 
 
+    if (e.target.textContent === "All comments")
+    {e.preventDefault(), renderComments()
+    }
+
    }) 
+
+   function renderComments() {
+     // fetch request to localhost:3000/comments
+     // creating <p> elemnts or <li> for each comment if comment park_id matches park.id (find parentNode of button and use form.dataset)
+     // <p> text Content set to comment.description
+   }
 
   }
   )}
