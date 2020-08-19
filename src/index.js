@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
   const usStates = [
       { name: 'ALABAMA', abbreviation: 'AL'},
@@ -59,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
       { name: 'WISCONSIN', abbreviation: 'WI'},
       { name: 'WYOMING', abbreviation: 'WY' }
   ];
+
   for(var i = 0;i<usStates.length;i++){
       let option = document.createElement("option");
       option.text = usStates[i].name+' '+usStates[i].abbreviation+'';
@@ -66,11 +68,15 @@ document.addEventListener("DOMContentLoaded", () => {
       let select = document.getElementById("state");
       select.appendChild(option);
   }
+
+
   const stateSelector = document.querySelector('.form-city')
   const select = document.getElementById("state");
 
   getParks()
+
   function getParks() {
+
   stateSelector.addEventListener("submit", function(e){           // eventListener to form
     e.preventDefault()
 
@@ -94,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
           let parkContainer = document.createElement('div')
           parkContainer.className = "park-container"
           parkContainer.innerHTML =` <h1> ${park.name}</h1>
-                                    <img src= ${park.image_url}/>
+                                    <img src= ${park.image_url}>
                                     <p>Address: ${park.address}</p>
                                     <p>Contacts: ${park.contact}</p>
                                     <p>Activities: ${park.activities}</p>
@@ -107,13 +113,17 @@ document.addEventListener("DOMContentLoaded", () => {
                                    `
 
                            container.appendChild(parkContainer)
-                let form = document.querySelector('.comment-form')    //set dataset to comment form
+                let form = parkContainer.querySelector('.comment-form')    //set dataset to comment form
                 form.dataset.parkId = park.id
-               // console.log(form.dataset.parkId)
+               console.log(form.dataset.parkId)
 
         }
    })
   }
+
+
+
+
 
   let div = document.querySelector(".park-section")
 
@@ -124,7 +134,8 @@ div.addEventListener("click", function(e){
 
 let comment = e.target.parentNode[0].value                          //  comment  from input
 let parkId = e.target.parentNode.dataset.parkId
-console.log(e.target.parentNode)
+
+
 
   let options = {
        method: "POST",
@@ -134,20 +145,31 @@ console.log(e.target.parentNode)
        },
        body: JSON.stringify( {  park_id: parkId, user_id: 58, description: comment } )
     }
+
   fetch ( "http://www.localhost:3000/comments", options)
   .then(resp =>  resp.json())
   .then(comm => console.log(comm), alert("Thank you for your comment")
   )
 }
-    if (e.target.textContent === "All comments")
-    {e.preventDefault(), renderComments()
+
+    if (e.target.textContent === "All comments"){
+         e.preventDefault(),
+
+
+         fetch("http://www.localhost:3000/comment/" + parkId)
+        .then(resp => resp.json())
+        .then(obj => { renderComments(obj)
+  })
     }
+
    })
-   function renderComments() {
-     // fetch request to localhost:3000/comments
-     // creating <p> elemnts or <li> for each comment if comment park_id matches park.id (find parentNode of button and use form.dataset)
+
+   function renderComments(obj) {
+
+     // need: create <p> elemnts or <li> for each comment if comment park_id matches park.id (find parentNode of button and use form.dataset)
      // <p> text Content set to comment.description
    }
+
   }
   )}
 })
