@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
           let parkContainer = document.createElement('div')
           parkContainer.className = "park-container"
           parkContainer.innerHTML =` <h1> ${park.name}</h1>
-                                    <img src= ${park.image_url}/>
+                                    <img src= ${park.image_url}>
                                     <p>Address: ${park.address}</p>
                                     <p>Contacts: ${park.contact}</p>
                                     <p>Activities: ${park.activities}</p>
@@ -108,21 +108,19 @@ document.addEventListener("DOMContentLoaded", () => {
                                     <input  type="text" name="comment"  placeholder="Add a comment..." />
                                     <button class="comment-button" type="submit">Post</button>
                                     </form>
-                                    <input type="button" value= "All comments">
+                                    <input type="button" value= "All comments"> 
+                                    <br>
+                                    <br>
                                    `
                                    
                            container.appendChild(parkContainer)
                 let form = parkContainer.querySelector('.comment-form')    //set dataset to comment form
                 form.dataset.parkId = park.id
-               console.log(form.dataset.parkId)
+               
                                   
         }
    }) 
   } 
-
- 
-
-
 
   let div = document.querySelector(".park-section")
   
@@ -150,26 +148,41 @@ let parkId = e.target.parentNode.dataset.parkId
   .then(comm => console.log(comm), alert("Thank you for your comment")  
   )
 } 
+ 
+    if (e.target.value === "All comments"){
+         //e.preventDefault(); 
+         let form = e.target.parentNode.querySelector(".comment-form")
+         let parkId = form.dataset.parkId 
 
-    if (e.target.textContent === "All comments"){
-         e.preventDefault(), 
          
-     
-         fetch("http://www.localhost:3000/comment/" + parkId)
+         fetch("http://www.localhost:3000/parks/" + parkId)
         .then(resp => resp.json())
-        .then(obj => { renderComments(obj)
-  })
+        .then(obj =>  {renderComments(obj) 
+        })
     }
 
    }) 
 
-   function renderComments(obj) {
+    function renderComments(obj) {
+         let  allForms = document.querySelectorAll(".comment-form")   // finding all park containers
+         allForms.forEach(form =>{                               //finding the rigth park container where to render comments
+              if (form.dataset.parkId == obj.id )  {                   
+            form.parentNode.lastChild.remove()                     // reseting comments
+            let commentsList =  document.createElement('ul')      // creating new ul for comments
+            commentsList.className = "rendered-comments-field"
+            form.parentNode.appendChild(commentsList)
+ 
+            obj.comments.forEach(comm =>{                                 // render all comments
+            let li = document.createElement('li')
+            li.innerHTML =  `<p>${comm.description}</p> 
+                             <input type="button" value= "Delete Comment"> 
+                             <br><br>  `
+            commentsList.appendChild(li)
+      })
+     }
+    })
 
-     // need: create <p> elemnts or <li> for each comment if comment park_id matches park.id (find parentNode of button and use form.dataset)
-     // <p> text Content set to comment.description
-   }
-
-  }
+  }}
   )}
 })
 
