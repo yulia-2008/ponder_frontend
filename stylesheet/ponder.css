@@ -27,9 +27,22 @@ body {
 }
 
 .park-container {
-  margin-left: 200px;
-  margin-right: 200px;
+  margin-left: 20px;
+  margin-right: 20px;
   padding :20px;
   background-color: rgb(203, 215, 247);
 
+}
+
+.park-section {
+  margin-left: 20px;
+  margin-right: 20px;
+  padding :20px;
+  
+
+}
+.comment-button {
+   padding: 10px;
+    margin: 10px;
+  font-size: 15px ;
 }
