@@ -59,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
       { name: 'WISCONSIN', abbreviation: 'WI'},
       { name: 'WYOMING', abbreviation: 'WY' }
   ];
-
   for(var i = 0;i<usStates.length;i++){
       let option = document.createElement("option");
       option.text = usStates[i].name+' '+usStates[i].abbreviation+'';
@@ -67,125 +66,88 @@ document.addEventListener("DOMContentLoaded", () => {
       let select = document.getElementById("state");
       select.appendChild(option);
   }
-
-
-
-
   const stateSelector = document.querySelector('.form-city')
   const select = document.getElementById("state");
 
-
-
+  getParks()
   function getParks() {
-
-  stateSelector.addEventListener("submit", function(e){
+  stateSelector.addEventListener("submit", function(e){           // eventListener to form
     e.preventDefault()
 
-    let selectedState = e.target[0].options[select.selectedIndex].text;
-    let abbr = selectedState.split(" ")[1]
+    let selectedState = e.target[0].options[select.selectedIndex].text;  // take data from selection
+    let abbr = selectedState.split(" ")[1]                               // extract abbreviation from selected state
 
-
-<<<<<<< HEAD
-     fetch(  `https://developer.nps.gov/api/v1/parks?limit=10&stateCode=${abbr}&api_key=hneol4X1l2adxmk2NQ0lHI7iXRjgZhd0jCoo9Wjc` )
+     fetch("http://www.localhost:3000/parks")
     .then(resp => resp.json())
-    .then(obj => {console.log(obj)
-    })
+    .then(obj => { resetResults(), renderParks(obj)
   })
-}
-  const renderHtml = (parkObj) => {
-    parkObj.forEach(park => {
-      const fullNameLi = document.createElement('li')
-      const ulContainer = document.querySelector("body > form > div > ul")
 
+  function resetResults() {                                       // remove older search results
 
-
-
-
-
-    })
-}
-
-
-
-
-
-
-
-=======
-
-     fetch(  `https://developer.nps.gov/api/v1/parks?limit=20&stateCode=${abbr}&api_key=hneol4X1l2adxmk2NQ0lHI7iXRjgZhd0jCoo9Wjc` )
-    .then(resp => resp.json())
-    .then(obj => { obj.data.forEach(park => {renderPark(park)})
->>>>>>> a5ad1a37b0cbe4fc6f5df435698402ed81a9346e
-
-  })
-      function renderPark(park) {
-console.log(park.images[0].url)
-        let body = document.querySelector('body')
-        let parkContainer = document.createElement('div')
-        parkContainer.className="park-container"
-        parkContainer.innerHTML =` <h1> ${park.fullName}</h1>
-                                   <img src=${park.images[0].url}/>
-                                   <p>Park Description:</p>
-                                   <p>${park.description}</p><br>
-                                   <p>Address: ${park.addresses[0].city}, ${park.addresses[0].postalCode}</p>
-                                   <p>Contacts: ${park.contacts.phoneNumbers[0].phoneNumber}</p>
-                                   <p>Operation hours:  ${park.operatingHours[0].standardHours.wednesday}</p><br>
-                                   <p>Activities:</p>
-                                   <ul>
-                                   <li>${park.activities[0].name}</li>
-                                   <li>${park.activities[1].name}</li>
-                                   <li>${park.activities[2].name}</li>
-                                   <li>${park.activities[3].name}</li>
-                                   <li>${park.activities[4].name}</li>
-                                   <li>${park.activities[5].name}</li>
-                                   </ul>
+        let div = document.querySelector('.park-section')
+        div.innerHTML = " "
+  }
+  function renderParks(obj) {
+        obj.forEach(park => {
+         if (park.address === abbr)                                 // render park if park's address matches selected state
+         { let container = document.querySelector('.park-section')
+          let parkContainer = document.createElement('div')
+          parkContainer.className = "park-container"
+          parkContainer.innerHTML =` <h1> ${park.name}</h1>
+                                    <img src= ${park.image_url}/>
+                                    <p>Address: ${park.address}</p>
+                                    <p>Contacts: ${park.contact}</p>
+                                    <p>Activities: ${park.activities}</p>
                                     <br>
+                                    <form  class="comment-form">
+                                    <input  type="text" name="comment"  placeholder="Add a comment..." />
+                                    <button class="comment-button" type="submit">Post</button>
+                                    </form>
+                                    <input type="button" value= "All comments">
                                    `
 
+                           container.appendChild(parkContainer)
+                let form = document.querySelector('.comment-form')    //set dataset to comment form
+                form.dataset.parkId = park.id
+               // console.log(form.dataset.parkId)
 
-        body.appendChild(parkContainer)
-      }
-     
-     
-      
-
-
-//  let options = {
-//        method: "POST",
-//        headers: {
-//          "Content-Type": "application/json",
-//          "Accept": "application/json"
-//        },
-<<<<<<< HEAD
-//        body: JSON.stringify( {imageId: 1, content: text} )
-//    }
-
-//  fetch ( "http://localhost:3000/comments", options)
-//  .then(res => {form.reset(),  getImage()} )
-
-})
-=======
-//        body: JSON.stringify( { name: ??????} )       
-//     }
-
-//   fetch ( "http://www.localhost:3000/parks", options)
-//   .then(res => { console.log(res)} )   
-
-
-    
-    })
+        }
+   })
   }
 
+  let div = document.querySelector(".park-section")
 
- getParks()
-  // function postParks() {
-  //   document.addEventListener("submit", function(e){
-  //    e.preventDefault()
+div.addEventListener("click", function(e){
 
-     
+  if (e.target.textContent === "Post") {
+  e.preventDefault()
+
+let comment = e.target.parentNode[0].value                          //  comment  from input
+let parkId = e.target.parentNode.dataset.parkId
+console.log(e.target.parentNode)
+
+  let options = {
+       method: "POST",
+       headers: {
+         "Content-Type": "application/json",
+         "Accept": "application/json"
+       },
+       body: JSON.stringify( {  park_id: parkId, user_id: 58, description: comment } )
+    }
+  fetch ( "http://www.localhost:3000/comments", options)
+  .then(resp =>  resp.json())
+  .then(comm => console.log(comm), alert("Thank you for your comment")
+  )
+}
+    if (e.target.textContent === "All comments")
+    {e.preventDefault(), renderComments()
+    }
+   })
+   function renderComments() {
+     // fetch request to localhost:3000/comments
+     // creating <p> elemnts or <li> for each comment if comment park_id matches park.id (find parentNode of button and use form.dataset)
+     // <p> text Content set to comment.description
+   }
+  }
+  )}
 })
-   
-
-
->>>>>>> a5ad1a37b0cbe4fc6f5df435698402ed81a9346e
