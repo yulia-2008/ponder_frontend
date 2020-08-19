@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
   const usStates = [
       { name: 'ALABAMA', abbreviation: 'AL'},
@@ -123,7 +122,6 @@ document.addEventListener("DOMContentLoaded", () => {
    })
   }
 
-
   let div = document.querySelector(".park-section")
 
 div.addEventListener("click", function(e){
@@ -142,7 +140,7 @@ let parkId = e.target.parentNode.dataset.parkId
          "Content-Type": "application/json",
          "Accept": "application/json"
        },
-       body: JSON.stringify( {  park_id: parkId, user_id: 58, description: comment } )
+       body: JSON.stringify( {  park_id: parkId, user_id: 39, description: comment } )       
     }
 
   fetch ( "http://www.localhost:3000/comments", options)
