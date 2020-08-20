@@ -104,14 +104,17 @@ document.addEventListener("DOMContentLoaded", () => {
                                     <p class='park-picture'>Contacts: ${park.contact}</p>
                                     <p class='park-picture' >Activities: ${park.activities}</p>
                                     <br>
-                                    <form  class="comment-form">
-                                    <input   type="text" name="comment"  placeholder="Add a comment..." />
-                                    
-                                    <button class="comment-button" type="submit">Post</button>
+
+                                    <form class="like-form">
+                                    <span class="likes">${park.likes}</span>
+                                    <button class="like-button">♥</button>
                                     </form>
 
-                                    <input type="button" value= "All comments"> 
-                                    
+                                    <form  class="comment-form">
+                                    <input   type="text" name="comment"  placeholder="Add a comment..." />                                  
+                                    <button class="comment-button" type="submit">Post</button>
+                                    </form>
+                                    <input type="button" value= "All comments">                                     
                                     <br>
                                     <br>
                                    `
@@ -183,6 +186,45 @@ let parkId = e.target.parentNode.dataset.parkId
       
     } 
     
+    if (e.target.textContent === "♥"){
+      e.preventDefault()
+      let parkId = e.target.parentNode.dataset.parkId
+      let likeBttn = parseInt(document.querySelector("body > div.park-section > div:nth-child(1) > form > span").textContent)
+      likeBttn++
+
+     console.log (likeBttn)
+
+
+    }
+       
+      // 
+      // 
+      // document.querySelector("body > div.park-section > div:nth-child(1) > form > span").textContent = `${likeBttn} likes`
+      // const options = {
+      //   method:'PATCH',
+      //   headers:{
+      //     'Content-Type': 'application/json',
+      //     'accept': 'application/json'
+      //   },
+      //   body: JSON.stringify({park_id: parkId, user_id: 39, likes: likeBttn})
+      // }
+      // fetch("http://www.localhost:3000/parks/" + parkId, options)
+      // .then(response => response.json())
+      // .then(obj => console.dir(obj))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
    }) 
