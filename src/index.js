@@ -98,17 +98,20 @@ document.addEventListener("DOMContentLoaded", () => {
          { let container = document.querySelector('.park-section')   
           let parkContainer = document.createElement('div')
           parkContainer.className = "park-container"
-          parkContainer.innerHTML =` <h1> ${park.name}</h1>
-                                    <img src= ${park.image_url}>
-                                    <p>Address: ${park.address}</p>
-                                    <p>Contacts: ${park.contact}</p>
-                                    <p>Activities: ${park.activities}</p>
+          parkContainer.innerHTML =` <h1 class="park-name"> ${park.name}</h1>
+                                    <img class ="park-picture" src= ${park.image_url}>
+                                    <p class='park-picture'>Address: ${park.address}</p>
+                                    <p class='park-picture'>Contacts: ${park.contact}</p>
+                                    <p class='park-picture' >Activities: ${park.activities}</p>
                                     <br>
                                     <form  class="comment-form">
-                                    <input  type="text" name="comment"  placeholder="Add a comment..." />
+                                    <input   type="text" name="comment"  placeholder="Add a comment..." />
+                                    
                                     <button class="comment-button" type="submit">Post</button>
                                     </form>
+
                                     <input type="button" value= "All comments"> 
+                                    
                                     <br>
                                     <br>
                                    `
@@ -132,7 +135,6 @@ div.addEventListener("click", function(e){
 let comment = e.target.parentNode[0].value                          //  comment  from input                                                 
 let parkId = e.target.parentNode.dataset.parkId 
 
- 
                               
   let options = {
        method: "POST",
@@ -145,7 +147,16 @@ let parkId = e.target.parentNode.dataset.parkId
 
   fetch ( "http://www.localhost:3000/comments", options)
   .then(resp =>  resp.json())     
-  .then(comm => console.log(comm), alert("Thank you for your comment")  
+  .then(comm => { alert("Thank you for your comment");
+  console.dir(e.target.parentNode)
+            let commentsList = e.target.parentNode.parentNode.lastChild
+            let li = document.createElement('li')
+            li.innerHTML =  `<p>${comm.description}</p> 
+                             <input type="button" value= "Delete Comment"> 
+                             <br><br>  `
+            li.dataset.commId = comm.id
+            commentsList.appendChild(li)  
+  }
   )
 } 
  
@@ -160,6 +171,19 @@ let parkId = e.target.parentNode.dataset.parkId
         .then(obj =>  {renderComments(obj) 
         })
     }
+
+    if(e.target.value === "Delete Comment") { 
+           let li =  e.target.parentNode                  //find id of comment for deletion            
+           let commId = li.dataset.commId
+           
+
+           const options = { method: "DELETE"}
+           fetch( "http://localhost:3000/comments/" + commId, options)
+           .then( li.remove() )
+      
+    } 
+    
+
 
    }) 
 
@@ -177,6 +201,7 @@ let parkId = e.target.parentNode.dataset.parkId
             li.innerHTML =  `<p>${comm.description}</p> 
                              <input type="button" value= "Delete Comment"> 
                              <br><br>  `
+            li.dataset.commId = comm.id
             commentsList.appendChild(li)
       })
      }
