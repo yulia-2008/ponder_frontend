@@ -197,16 +197,10 @@ div.addEventListener("click", function(e){
     if (e.target.textContent === "♥"){   //
       e.preventDefault()
       let parkId = e.target.parentNode.dataset.parkId
-console.log("park id" , parkId)
-      let h3= e.target.parentNode.children[0].textContent
-      let likesNumber = parseInt(h3) 
-    
-      likesNumber = likesNumber + 1
- 
+      let h3= e.target.parentNode.children[0].textContent              //finding likes section and increasing likes
+      let likesNumber = parseInt(h3)    
+      likesNumber ++
       h3  = `${likesNumber} likes`
-  console.log( h3)
-   
-      
 
        const options = {
              method:'PATCH',
@@ -217,13 +211,22 @@ console.log("park id" , parkId)
              body: JSON.stringify({ likes: likesNumber })
         }
         fetch("http://www.localhost:3000/parks/" + parkId, options)
-       .then(  resp=>(console.log(resp)) )
-      renderLikes()
+       .then(  resp=>{console.log(resp), renderLikes() }   )
+      
 
        function renderLikes(){
        fetch("http://www.localhost:3000/parks/" + parkId)
        .then(resp => resp.json())
-       .then(obj => {  console.log(obj.likes)})   
+       .then(obj => {  console.log(obj.likes, "after rendering ")
+               let allLikes = document.querySelectorAll('h3')
+               
+               allLikes.forEach( like => { let likeId = like.parentNode.dataset.parkId 
+                console.log(likeId, "likeId"), console.log(obj.id, "objId"), console.log(like.textContent)
+                 if (obj.id == likeId)
+                {  like.innerHTML = `${obj.likes} likes`}
+               })
+               
+      })   
       }
   
     }
