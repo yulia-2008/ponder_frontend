@@ -66,34 +66,37 @@ document.addEventListener("DOMContentLoaded", () => {
       option.value = i;
       let select = document.getElementById("state");
       select.appendChild(option);
-  }
+      }
 
 
   const stateSelector = document.querySelector('.form-city')
   const select = document.getElementById("state");
   
-  getParks()
-
-  function getParks() {
 
   stateSelector.addEventListener("submit", function(e){           // eventListener to form
     e.preventDefault()
+
+      let selectedState = e.target[0].options[select.selectedIndex].text;  // take data from selection
+      let abbr = selectedState.split(" ")[1]                               // extract abbreviation from selected state
+
+    getParks(abbr=abbr)
+    })
   
-    let selectedState = e.target[0].options[select.selectedIndex].text;  // take data from selection
-    let abbr = selectedState.split(" ")[1]                               // extract abbreviation from selected state
-    
-     fetch("http://www.localhost:3000/parks")
-    .then(resp => resp.json())
-    .then(obj => { resetResults(), renderParks(obj)
-  })
-      
-  function resetResults() {                                       // remove older search results
-      
+  
+    function getParks(abbr) {
+       fetch("http://www.localhost:3000/parks")
+       .then(resp => resp.json())
+       .then(obj => { resetResults(), renderParks(obj, abbr) })   
+       }
+
+    function resetResults() {                                       // remove older search results
         let div = document.querySelector('.park-section') 
         div.innerHTML = " "
-  } 
-  function renderParks(obj) {
-        obj.forEach(park => { 
+        } 
+
+
+  function renderParks(obj, abbr) {
+         obj.forEach(park => { 
          if (park.address === abbr)                                 // render park if park's address matches selected state
          { let container = document.querySelector('.park-section')   
           let parkContainer = document.createElement('div')
@@ -105,16 +108,16 @@ document.addEventListener("DOMContentLoaded", () => {
                                     <p class='park-picture' >Activities: ${park.activities}</p>
                                     <br>
 
-                                    <form class="like-form">
-                                    <span class="likes">${park.likes}</span>
+                                    <div class="like-section">
+                                    <h3 class="likes"> ${park.likes} likes </h3>
                                     <button class="like-button">♥</button>
-                                    </form>
+                                    </div>
 
                                     <form  class="comment-form">
                                     <input   type="text" name="comment"  placeholder="Add a comment..." />                                  
                                     <button class="comment-button" type="submit">Post</button>
                                     </form>
-                                    <input type="button" value= "All comments">                                     
+                                    <input type="button" value= "All comments"/>                                     
                                     <br>
                                     <br>
                                    `
@@ -122,36 +125,40 @@ document.addEventListener("DOMContentLoaded", () => {
                            container.appendChild(parkContainer)
                 let form = parkContainer.querySelector('.comment-form')    //set dataset to comment form
                 form.dataset.parkId = park.id
+                let  divLikes = parkContainer.querySelector('.like-section')
+                divLikes.dataset.parkId = park.id
                
+                
                                   
         }
    }) 
   } 
 
-  let div = document.querySelector(".park-section")
+let div = document.querySelector(".park-section")
   
 div.addEventListener("click", function(e){
  
   if (e.target.textContent === "Post") {
-  e.preventDefault()
+      e.preventDefault()
   
-let comment = e.target.parentNode[0].value                          //  comment  from input                                                 
-let parkId = e.target.parentNode.dataset.parkId 
+      let comment = e.target.parentNode[0].value                          //  comment  from input                                                 
+      let parkId = e.target.parentNode.dataset.parkId 
 
-                              
-  let options = {
-       method: "POST",
-       headers: {
-         "Content-Type": "application/json",
-         "Accept": "application/json"
-       },
-       body: JSON.stringify( {  park_id: parkId, user_id: 58, description: comment } )       
-    }
+      let options = {
+          method: "POST",
+          headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+          },
+          body: JSON.stringify( {  park_id: parkId, user_id: 58, description: comment } )       
+          }
 
-  fetch ( "http://www.localhost:3000/comments", options)
-  .then(resp =>  resp.json())     
-  .then(comm => { alert("Thank you for your comment");
-  console.dir(e.target.parentNode)
+    fetch ( "http://www.localhost:3000/comments", options)
+    .then(resp =>  resp.json())     
+    .then(comm => { alert("Thank you for your comment");
+
+           // let commentsList = document.createElement('ul')
+           // e.target.parentNode.parentNode.appendChild(commentsList)
             let commentsList = e.target.parentNode.parentNode.lastChild
             let li = document.createElement('li')
             li.innerHTML =  `<p>${comm.description}</p> 
@@ -159,9 +166,9 @@ let parkId = e.target.parentNode.dataset.parkId
                              <br><br>  `
             li.dataset.commId = comm.id
             commentsList.appendChild(li)  
-  }
-  )
-} 
+           })
+  
+  } 
  
     if (e.target.value === "All comments"){
          //e.preventDefault(); 
@@ -172,13 +179,12 @@ let parkId = e.target.parentNode.dataset.parkId
          fetch("http://www.localhost:3000/parks/" + parkId)
         .then(resp => resp.json())
         .then(obj =>  {renderComments(obj) 
-        })
+         })
     }
 
     if(e.target.value === "Delete Comment") { 
            let li =  e.target.parentNode                  //find id of comment for deletion            
-           let commId = li.dataset.commId
-           
+           let commId = li.dataset.commId  
 
            const options = { method: "DELETE"}
            fetch( "http://localhost:3000/comments/" + commId, options)
@@ -186,73 +192,70 @@ let parkId = e.target.parentNode.dataset.parkId
       
     } 
     
-    if (e.target.textContent === "♥"){
+   // likes!
+
+    if (e.target.textContent === "♥"){   //
       e.preventDefault()
       let parkId = e.target.parentNode.dataset.parkId
-      let likeBttn = parseInt(document.querySelector("body > div.park-section > div:nth-child(1) > form > span").textContent)
-      likeBttn++
+console.log("park id" , parkId)
+      let h3= e.target.parentNode.children[0].textContent
+      let likesNumber = parseInt(h3) 
+    
+      likesNumber = likesNumber + 1
+ 
+      h3  = `${likesNumber} likes`
+  console.log( h3)
+   
+      
 
-     console.log (likeBttn)
+       const options = {
+             method:'PATCH',
+             headers:{
+             'Content-Type': 'application/json',
+             'accept': 'application/json'
+             },
+             body: JSON.stringify({ likes: likesNumber })
+        }
+        fetch("http://www.localhost:3000/parks/" + parkId, options)
+       .then(  resp=>(console.log(resp)) )
+      renderLikes()
 
-
+       function renderLikes(){
+       fetch("http://www.localhost:3000/parks/" + parkId)
+       .then(resp => resp.json())
+       .then(obj => {  console.log(obj.likes)})   
+      }
+  
     }
-       
-      // 
-      // 
-      // document.querySelector("body > div.park-section > div:nth-child(1) > form > span").textContent = `${likeBttn} likes`
-      // const options = {
-      //   method:'PATCH',
-      //   headers:{
-      //     'Content-Type': 'application/json',
-      //     'accept': 'application/json'
-      //   },
-      //   body: JSON.stringify({park_id: parkId, user_id: 39, likes: likeBttn})
-      // }
-      // fetch("http://www.localhost:3000/parks/" + parkId, options)
-      // .then(response => response.json())
-      // .then(obj => console.dir(obj))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   }) 
+    
+}) 
+ 
 
     function renderComments(obj) {
-         let  allForms = document.querySelectorAll(".comment-form")   // finding all park containers
-         allForms.forEach(form =>{                               //finding the rigth park container where to render comments
-              if (form.dataset.parkId == obj.id )  {                   
-            form.parentNode.lastChild.remove()                     // reseting comments
-            let commentsList =  document.createElement('ul')      // creating new ul for comments
-            commentsList.className = "rendered-comments-field"
-            form.parentNode.appendChild(commentsList)
+          let  allForms = document.querySelectorAll(".comment-form")   // finding all park containers
+          allForms.forEach(form =>{                               //finding the rigth park container where to render comments
+      if (form.dataset.parkId == obj.id )  {                   
+         form.parentNode.lastChild.remove()                     // reseting comments
+         let commentsList =  document.createElement('ul')      // creating new ul for comments
+         commentsList.className = "rendered-comments-field"
+         form.parentNode.appendChild(commentsList)
  
-            obj.comments.forEach(comm =>{                                 // render all comments
-            let li = document.createElement('li')
-            li.innerHTML =  `<p>${comm.description}</p> 
+         obj.comments.forEach(comm =>{                                 // render all comments
+         let li = document.createElement('li')
+         li.innerHTML =  `<p>${comm.description}</p> 
                              <input type="button" value= "Delete Comment"> 
                              <br><br>  `
-            li.dataset.commId = comm.id
-            commentsList.appendChild(li)
-      })
-     }
+         li.dataset.commId = comm.id
+         commentsList.appendChild(li)
+         })
+      }
+
     })
 
-  }}
-  )}
-})
+  }
+  
 
+})
 
 
 
