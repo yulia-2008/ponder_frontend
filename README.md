@@ -1,7 +1,3 @@
-# ponder_frontend
-
-Park app. Browse USA parks, add likes, leave comments.
-
 
 
 <h1 align="center">PONDER</h1>
