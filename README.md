@@ -18,7 +18,7 @@
 <h2>Built With:</h2>
   <p> Frontend: <b>Vanila JavaScript</b>. </p>
   <p> Backend: <b>Ruby on Rails</b> to create RESTful design of the app.</p>
-  <p>          <b>Postgres</b> database for managing the data.</p>
+  <p> &nspb; &nspb; &nspb; &nspb; &nspb; <b>Postgres</b> database for managing the data.</p>
   
 <h2>Getting Started</h2>
 <p><b>Instructions on setting up the project locally.</b> </p>
